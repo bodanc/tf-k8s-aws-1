@@ -43,7 +43,7 @@ resource "aws_route_table" "rtb-public" {
 resource "aws_route_table" "rtb-private" {
   vpc_id = aws_vpc.vpc0.id
 
-  route = {
+  route {
     cidr_block = aws_vpc.vpc0.cidr_block
     gateway_id = "local"
   }
@@ -83,13 +83,13 @@ resource "aws_subnet" "subnet-public0" {
 }
 
 resource "aws_route_table_association" "private" {
-  subnet_id      = aws_subnet.subnet-private0
-  route_table_id = aws_route_table.rtb-private
+  subnet_id      = aws_subnet.subnet-private0.id
+  route_table_id = aws_route_table.rtb-private.id
 }
 
 resource "aws_route_table_association" "public" {
-  subnet_id = aws_subnet.subnet-public0
-  route_table_id = aws_route_table.rtb-public
+  subnet_id = aws_subnet.subnet-public0.id
+  route_table_id = aws_route_table.rtb-public.id
 }
 
 
