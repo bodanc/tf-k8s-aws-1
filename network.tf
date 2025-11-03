@@ -69,10 +69,10 @@ resource "aws_subnet" "subnet-private0" {
 }
 
 resource "aws_subnet" "subnet-public0" {
-  vpc_id = aws_vpc.vpc0.id
+  vpc_id     = aws_vpc.vpc0.id
   cidr_block = "10.64.0.0/18"
 
-  availability_zone = data.aws_availability_zones.available.names[0]
+  availability_zone       = data.aws_availability_zones.available.names[0]
   map_public_ip_on_launch = true
 
   tags = {
@@ -88,12 +88,9 @@ resource "aws_route_table_association" "private" {
 }
 
 resource "aws_route_table_association" "public" {
-  subnet_id = aws_subnet.subnet-public0.id
+  subnet_id      = aws_subnet.subnet-public0.id
   route_table_id = aws_route_table.rtb-public.id
 }
-
-
-
 
 # resource "aws_network_acl" "nacl0" {
 #   vpc_id = aws_vpc.vpc0
@@ -103,11 +100,27 @@ resource "aws_route_table_association" "public" {
 #   }
 
 #   ingress {
-
 #   }
-
 # }
 
-# resource "aws_security_group" "secgr0" {
-  
-# }
+resource "aws_security_group" "sec-gr-k8s" {
+  name   = ""
+  vpc_id = aws_vpc.vpc0.id
+
+  # ingress {
+  #   ...
+  # }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    name       = ""
+    created_by = ""
+  }
+
+}
