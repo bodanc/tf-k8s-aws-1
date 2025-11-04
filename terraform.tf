@@ -1,4 +1,9 @@
 terraform {
+
+  backend "local" {
+    path = "./terraform.tfstate"
+  }
+
   required_version = ">= 1.13"
 
   required_providers {
@@ -18,10 +23,6 @@ terraform {
     #   version = "value"
     # }
 
-  }
-
-  backend "local" {
-    path = "./terraform.tfstate"
   }
 
 }
