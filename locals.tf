@@ -1,6 +1,9 @@
 locals {
   tags_common = {
-    A = ""
-    B = ""
+    created_by  = "terraform"
+    company     = var.company
+    project     = var.project
+    environment = var.environment
   }
+  prefix = "${var.project}-${var.environment}"
 }

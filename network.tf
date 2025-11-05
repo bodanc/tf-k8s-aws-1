@@ -6,19 +6,16 @@ resource "aws_vpc" "vpc0" {
   cidr_block       = "10.0.0.0/16"
   instance_tenancy = "default"
 
-  tags = {
-    name       = "vpc0"
-    created_by = "terraform"
-  }
+  enable_dns_support   = var.enable_dns_support
+  enable_dns_hostnames = var.enable_dns_hostnames
+
+  tags = merge(local.tags_common, { name = lower("${local.prefix}-vpc0") })
 }
 
 resource "aws_internet_gateway" "igw0" {
   vpc_id = aws_vpc.vpc0.id
 
-  tags = {
-    name       = "igw0"
-    created_by = "terraform"
-  }
+  tags = merge(local.tags_common, { name = lower("${local.prefix}-igw0") })
 }
 
 resource "aws_route_table" "rtb-public" {
@@ -34,10 +31,8 @@ resource "aws_route_table" "rtb-public" {
     gateway_id = aws_internet_gateway.igw0.id
   }
 
-  tags = {
-    name       = "rtb-public"
-    created_by = "terraform"
-  }
+  tags = merge(local.tags_common, { name = lower("${local.prefix}-rtb-pub") })
+
 }
 
 resource "aws_route_table" "rtb-private" {
@@ -48,10 +43,7 @@ resource "aws_route_table" "rtb-private" {
     gateway_id = "local"
   }
 
-  tags = {
-    name       = "rtb-private"
-    created_by = "terraform"
-  }
+  tags = merge(local.tags_common, { name = lower("${local.prefix}-rtb-priv") })
 }
 
 resource "aws_subnet" "subnet-private0" {
@@ -62,10 +54,7 @@ resource "aws_subnet" "subnet-private0" {
 
   map_public_ip_on_launch = false
 
-  tags = {
-    name       = "subnet-private0"
-    created_by = "terraform"
-  }
+  tags = merge(local.tags_common, { name = lower("${local.prefix}-sub-priv0") })
 }
 
 resource "aws_subnet" "subnet-public0" {
@@ -75,10 +64,7 @@ resource "aws_subnet" "subnet-public0" {
   availability_zone       = data.aws_availability_zones.available.names[0]
   map_public_ip_on_launch = true
 
-  tags = {
-    name       = "subnet-public0"
-    created_by = "terraform"
-  }
+  tags = merge(local.tags_common, { name = lower("${local.prefix}-sub-pub0") })
 
 }
 
@@ -104,7 +90,7 @@ resource "aws_route_table_association" "public" {
 # }
 
 resource "aws_security_group" "sec-gr-k8s" {
-  name   = ""
+  name   = lower("${local.prefix}-sec-gr-k8s")
   vpc_id = aws_vpc.vpc0.id
 
   # ingress {
@@ -118,9 +104,6 @@ resource "aws_security_group" "sec-gr-k8s" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  tags = {
-    name       = ""
-    created_by = ""
-  }
+  tags = local.tags_common
 
 }
