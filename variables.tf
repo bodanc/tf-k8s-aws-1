@@ -15,11 +15,11 @@ variable "enable_dns_support" {
   default     = false
 }
 
-# variable "ec2_instance_type" {
-#   description = ""
-#   type        = string
-#   default     = "t2.medium"
-# }
+variable "ec2_instance_type" {
+  description = ""
+  type        = string
+  default     = "t2.medium"
+}
 
 
 # locals
