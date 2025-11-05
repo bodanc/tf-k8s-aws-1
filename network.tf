@@ -59,7 +59,7 @@ resource "aws_subnet" "subnet-private0" {
 
 resource "aws_subnet" "subnet-public0" {
   vpc_id     = aws_vpc.vpc0.id
-  cidr_block = "10.64.0.0/18"
+  cidr_block = "10.0.64.0/18"
 
   availability_zone       = data.aws_availability_zones.available.names[0]
   map_public_ip_on_launch = true
