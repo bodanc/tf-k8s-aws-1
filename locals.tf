@@ -1,6 +1,6 @@
 locals {
   tags_common = {
-    created_by  = "terraform"
+    created_by  = var.created_by
     company     = var.company
     project     = var.project
     environment = var.environment

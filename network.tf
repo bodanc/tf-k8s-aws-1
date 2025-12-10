@@ -21,18 +21,30 @@ resource "aws_internet_gateway" "igw0" {
 resource "aws_route_table" "rtb-public" {
   vpc_id = aws_vpc.vpc0.id
 
-  route {
-    cidr_block = aws_vpc.vpc0.cidr_block
-    gateway_id = "local"
-  }
+  # route {
+  #   cidr_block = aws_vpc.vpc0.cidr_block
+  #   gateway_id = "local"
+  # }
 
-  route {
-    cidr_block = "0.0.0.0/0"
-    gateway_id = aws_internet_gateway.igw0.id
-  }
+  # route {
+  #   cidr_block = "0.0.0.0/0"
+  #   gateway_id = aws_internet_gateway.igw0.id
+  # }
 
   tags = merge(local.tags_common, { name = lower("${local.prefix}-rtb-pub") })
 
+}
+
+resource "aws_route" "route-public-a" {
+  route_table_id         = aws_route_table.rtb-public.id
+  destination_cidr_block = aws_vpc.vpc0.cidr_block
+  gateway_id             = "local"
+}
+
+resource "aws_route" "route-public-b" {
+  route_table_id         = aws_route_table.rtb-public.id
+  destination_cidr_block = "0.0.0.0/0"
+  gateway_id             = aws_internet_gateway.igw0.id
 }
 
 resource "aws_route_table" "rtb-private" {
@@ -68,14 +80,14 @@ resource "aws_subnet" "subnet-public0" {
 
 }
 
-resource "aws_route_table_association" "private" {
-  subnet_id      = aws_subnet.subnet-private0.id
-  route_table_id = aws_route_table.rtb-private.id
-}
-
 resource "aws_route_table_association" "public" {
   subnet_id      = aws_subnet.subnet-public0.id
   route_table_id = aws_route_table.rtb-public.id
+}
+
+resource "aws_route_table_association" "private" {
+  subnet_id      = aws_subnet.subnet-private0.id
+  route_table_id = aws_route_table.rtb-private.id
 }
 
 # resource "aws_network_acl" "nacl0" {
@@ -93,9 +105,12 @@ resource "aws_security_group" "sec-gr-k8s" {
   name   = lower("${local.prefix}-sec-gr-k8s")
   vpc_id = aws_vpc.vpc0.id
 
-  # ingress {
-  #   ...
-  # }
+  ingress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 
   egress {
     from_port   = 0

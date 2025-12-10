@@ -4,6 +4,14 @@ terraform {
     path = "./terraform.tfstate"
   }
 
+  # backend "s3" {
+  #   bucket         = ""
+  #   key            = ""
+  #   region         = ""
+  #   encrypt        = false / true
+  #   dynamodb_table = ""
+  # }
+
   required_version = ">= 1.13"
 
   required_providers {
