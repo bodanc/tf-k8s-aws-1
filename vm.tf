@@ -34,12 +34,12 @@ data "aws_ami" "ubuntu" {
   owners = ["099720109477"] # Canonical
 }
 
-
 resource "aws_key_pair" "abc" {
   key_name   = ""
   public_key = ""
 }
 
+# parametrize and replace with logic to loop over n x ec2 instances
 resource "aws_instance" "k8s-srv-0" {
   ami           = data.aws_ssm_parameter.amzn2_linux.value
   instance_type = var.ec2_instance_type
